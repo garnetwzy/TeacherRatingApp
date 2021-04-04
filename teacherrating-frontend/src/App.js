@@ -1,8 +1,8 @@
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import SignIn from "./Signin";
-import SignUp from "./Signup"
-
+import SignIn from "./Components/Signin";
+import SignUp from "./Components/Signup"
+import PrimarySearchAppBar from "./Components/SearchAppBar"
 function App() {
   return (
     <div className="App">
@@ -12,7 +12,7 @@ function App() {
             <SignIn></SignIn>
           </Route>
           <Route exact path="/home">
-            home page.
+            <PrimarySearchAppBar></PrimarySearchAppBar>
           </Route>
           <Route exact path = "/signup">
             <SignUp></SignUp>
