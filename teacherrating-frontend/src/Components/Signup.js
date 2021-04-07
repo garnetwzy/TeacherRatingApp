@@ -12,19 +12,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useHistory } from "react-router-dom";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 const handleSubmit = (event) => {
   event.preventDefault();
 };
@@ -51,12 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
-  let [firstName, setFirstName] = useState("");
-  let [lastName, setLastName] = useState("");
-  let [email, setEmail] = useState("");
-  let [password, setPassword] = useState("");
   let history = useHistory();
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -79,10 +61,6 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
-                value={firstName}
-                onChange={(evt) => {
-                  setFirstName(evt.target.value);
-                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -94,10 +72,6 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
-                value={lastName}
-                onChange={(evt) => {
-                  setLastName(evt.target.value);
-                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -109,10 +83,6 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                value={email}
-                onChange={(evt) => {
-                  setEmail(evt.target.value);
-                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -125,10 +95,6 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                value={password}
-                onChange={(evt) => {
-                  setPassword(evt.target.value);
-                }}
               />
             </Grid>
           </Grid>
@@ -140,6 +106,10 @@ export default function SignUp() {
             className={classes.submit}
             onClick={async () => {
               let formData = new FormData();
+              let firstName = document.getElementById("firstName").value
+              let lastName = document.getElementById("lastName").value
+              let email = document.getElementById("email").value
+              let password = document.getElementById("password").value
               let userName = firstName + " " + lastName;
               formData.append("userName", userName);
               formData.append("email", email);
@@ -168,9 +138,6 @@ export default function SignUp() {
           </Grid>
         </form>
       </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }

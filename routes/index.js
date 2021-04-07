@@ -10,9 +10,6 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/login", async function (req, res, next) {
-  console.log("ddd");
-  console.log(req.body.email);
-  console.log(req.body.password);
   let result = await MyDB.queryUser({
     email: req.body.email,
     password: req.body.password,
@@ -34,6 +31,31 @@ router.post("/login", async function (req, res, next) {
       code: 550,
       error: "no such user.",
     });
+  }
+});
+
+router.post("/addteacher", async function (req, res, next) {
+  let queryResult = await MyDB.queryTeacher({
+    name: req.body.name,
+    university: req.body.university,
+    field: req.body.field
+  })
+  if (queryResult) {
+    res.json({code: 400, message: "This user is already been added."})
+  } else {
+    let teacher = {
+      name: req.body.name,
+      university: req.body.university,
+      field: req.body.field,
+      sumScores: 0,
+      comments: []
+    }
+    let result = await MyDB.storeTeacher(teacher)
+    if (result) {
+      res.json({code: 200});
+    } else {
+      res.json({code: 500});
+    }
   }
 });
 

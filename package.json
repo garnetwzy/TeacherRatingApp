@@ -7,6 +7,7 @@
     "dev": "node ./node_modules/nodemon/bin/nodemon.js ./bin/www"
   },
   "dependencies": {
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
