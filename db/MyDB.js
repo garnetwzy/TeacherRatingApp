@@ -1,5 +1,6 @@
 // const { MongoClient } = require('mongodb');
 const { MongoClient, ObjectId } = require("mongodb");
+const pageNumber = 6;
 
 function myDB() {
   const myDB = {};
@@ -50,6 +51,27 @@ function myDB() {
     }
   };
 
+  myDB.queryTeachers = async (page = 0, query = {}) => {
+    try {
+      client = new MongoClient(uri, { useUnifiedTopology: true });
+      await client.connect();
+      const db = client.db(dbName);
+      const userCol = db.collection("teachers");
+      let file = await userCol
+        .find(query)
+        .project({ comments: 0 })
+        .skip(page > 0 ? (page - 1) * pageNumber : 0)
+        .limit(pageNumber)
+        .toArray();
+      let count = await userCol.count(query);
+      console.log("filter");
+      console.log(count);
+      console.log(file);
+      return { result: file, count: count };
+    } finally {
+      client.close();
+    }
+  };
 
   myDB.storeTeacher = async (teacher) => {
     try {

@@ -48,7 +48,8 @@ router.post("/addteacher", async function (req, res, next) {
       university: req.body.university,
       field: req.body.field,
       sumScores: 0,
-      comments: []
+      comments: [],
+      commentCount: 0
     }
     let result = await MyDB.storeTeacher(teacher)
     if (result) {
@@ -71,6 +72,26 @@ router.post("/signup", async function (req, res, next) {
     });
   }
   res.json({ code: 200});
+});
+
+const nPerPage = 6;
+
+router.get("/teachers", async function (req, res, next) {
+  console.log("start teachers")
+  const query = req.query.query || "";
+  const page = +req.query.page || 0;
+  let result = await MyDB.queryTeachers(page)
+  res.json(result)
+  // Here pagination is implemented in Javascript
+
+  // You actually want to implement it in Mongo
+  // something like
+  //
+  // movies
+  //   .find({title: {$regex: query}})
+  //   .sort({ _id: 1 })
+  //   .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
+  //   .limit(nPerPage);
 });
 
 module.exports = router;

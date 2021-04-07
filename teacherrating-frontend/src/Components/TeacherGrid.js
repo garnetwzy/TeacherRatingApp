@@ -1,18 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Radio from "@material-ui/core/Radio";
-import Paper from "@material-ui/core/Paper";
 import TeacherItem from "./TeacherItem";
+import Pagination from "@material-ui/lab/Pagination";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      "& > *": {
+        marginTop: theme.spacing(2),
+      },
     },
     container: {
       alignItems: "flex-start",
@@ -22,28 +22,61 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function SpacingGrid() {
+const renderTeachers = (teachers) => {
+  let res = [];
+  for (let data of teachers) {
+    res.push(
+      <Grid key={data._id} item xs={4}>
+        <TeacherItem teacher={data} />
+      </Grid>
+    );
+  }
+  return res;
+};
+
+export default function TeacherGrid() {
   const classes = useStyles();
+  let [query, setQuery] = useState("");
+  let [page, setPage] = useState(0);
+  let [pageTotal, setPageTotal] = useState(10);
+  let [teachers, setTeachers] = useState([]);
+
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      console.log("start");
+      const resRaw = await fetch(`./teachers?query=${query}&page=${page}`);
+      const res = await resRaw.json();
+      console.log("Got data", res);
+      setTeachers(res.result);
+      let totalPage = Math.ceil((res.count * 1.0) / 6);
+      setPageTotal(totalPage);
+    };
+
+    console.log("Fetching DATA", query);
+    fetchTeachers();
+
+    return () => {
+      console.log("Will unmount");
+      //do any cleanup;
+    };
+  });
 
   return (
-    <div style={{ padding: 20 }}>
-      <Grid container className={classes.container} spacing={3}>
-        <Grid key={123} item xs={4}>
-          <TeacherItem />
-        </Grid>
-
-        <Grid key={123} item xs={4}>
-          <TeacherItem />
-        </Grid>
-
-        <Grid key={123} item xs={4}>
-          <TeacherItem />
-        </Grid>
-
-        <Grid key={123} item xs={4}>
-          <TeacherItem />
-        </Grid>
+    <Box width="100%" className={classes.root}>
+      <Box width={1} p={1} my={0.5}>
+        <div style={{ padding: 20 }}>
+          <Grid container className={classes.container} spacing={3}>
+            {renderTeachers(teachers)}
+          </Grid>
+        </div>
+      </Box>
+      <Grid container spacing={0} direction="column" alignItems="center">
+        <Pagination count={pageTotal} color="primary" onChange={handleChange}/>
       </Grid>
-    </div>
+    </Box>
   );
 }
