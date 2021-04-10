@@ -63,7 +63,7 @@ export default function TeacherGrid() {
       console.log("Will unmount");
       //do any cleanup;
     };
-  });
+  }, []);
 
   return (
     <Box width="100%" className={classes.root}>
@@ -75,7 +75,7 @@ export default function TeacherGrid() {
         </div>
       </Box>
       <Grid container spacing={0} direction="column" alignItems="center">
-        <Pagination count={pageTotal} color="primary" onChange={handleChange}/>
+        <Pagination count={pageTotal} color="primary" onChange={handleChange} />
       </Grid>
     </Box>
   );
