@@ -3,6 +3,7 @@ var router = express.Router();
 const MyDB = require("../db/MyDB");
 var jwt = require("jsonwebtoken");
 var config = require("../config/auth.config");
+const {ObjectId } = require("mongodb");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -77,7 +78,6 @@ router.post("/signup", async function (req, res, next) {
 const nPerPage = 6;
 
 router.get("/teachers", async function (req, res, next) {
-  console.log("start teachers")
   const query = req.query.query || "";
   const page = +req.query.page || 0;
   let result = await MyDB.queryTeachers(page)
@@ -92,6 +92,13 @@ router.get("/teachers", async function (req, res, next) {
   //   .sort({ _id: 1 })
   //   .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
   //   .limit(nPerPage);
+});
+
+router.get("/teacher", async function (req, res, next) {
+  const query = {_id: ObjectId(req.query.id)}
+  let result = await MyDB.queryTeacher(query)
+  console.log("end")
+  res.json(result)
 });
 
 module.exports = router;

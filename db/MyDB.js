@@ -38,12 +38,16 @@ function myDB() {
     }
   };
 
-  myDB.queryTeacher = async (query = {}) => {
+  myDB.queryTeacher = async (query) => {
     try {
+      console.log("ddd")
       client = new MongoClient(uri, { useUnifiedTopology: true });
       await client.connect();
       const db = client.db(dbName);
       const userCol = db.collection("teachers");
+      query._id = ObjectId(query._id)
+      console.log("id")
+      console.log(query)
       let file = await userCol.findOne(query);
       return file;
     } finally {

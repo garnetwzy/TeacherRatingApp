@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Rating from "@material-ui/lab/Rating";
 import Box from "@material-ui/core/Box";
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: {
@@ -28,6 +29,7 @@ const useStyles = makeStyles({
 export default function TeacherItem(props) {
   const classes = useStyles();
   console.log(props.teacher.commentCount)
+  let history = useHistory();
   let grade = 0
   if (props.teacher.commentCount > 0) {
       grade = props.teacher.sumScores * 1.0 / props.teacher.commentCount
@@ -55,7 +57,9 @@ export default function TeacherItem(props) {
           <Rating name="read-only" value={grade} readOnly/>
         </CardContent>
         <CardActions>
-          <Button size="small">Learn More</Button>
+          <Button size="small" onClick={() => {
+              history.push(`/detail?id=${props.teacher._id}`)
+          }}>Learn More</Button>
         </CardActions>
       </Card>
     </Box>

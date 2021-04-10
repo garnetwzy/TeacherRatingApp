@@ -6,10 +6,12 @@ import PrimarySearchAppBar from "./Components/SearchAppBar";
 import { useCookies } from "react-cookie";
 import TeacherGrid from "./Components/TeacherGrid"
 import AddTeacher from "./Components/AddTeacher"
+import TeacherDetail from "./Components/TeacherDetail"
 
 function App() {
   const [cookies, setCookie] = useCookies(["user"]);
   const showBar = false
+  
   return (
     <div className="App">
       <Router>
@@ -27,6 +29,10 @@ function App() {
           <Route exact path="/addteacher">
             <PrimarySearchAppBar showBar={false}></PrimarySearchAppBar>
             <AddTeacher></AddTeacher>
+          </Route>
+          <Route path="/detail">
+          <PrimarySearchAppBar showBar={false}></PrimarySearchAppBar>
+          <TeacherDetail></TeacherDetail>
           </Route>
         </Switch>
       </Router>
