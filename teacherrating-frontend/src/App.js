@@ -7,6 +7,7 @@ import { useCookies } from "react-cookie";
 import TeacherGrid from "./Components/TeacherGrid";
 import AddTeacher from "./Components/AddTeacher";
 import TeacherDetail from "./Components/TeacherDetail";
+import TeacherSearchBar from "./Components/TeacherSearchBar";
 
 function App() {
   const [cookies, setCookie] = useCookies(["user"]);
@@ -21,6 +22,7 @@ function App() {
           </Route>
           <Route exact path="/home">
             <PrimarySearchAppBar showBar={true}></PrimarySearchAppBar>
+            <TeacherSearchBar></TeacherSearchBar>
             <TeacherGrid></TeacherGrid>
           </Route>
           <Route exact path="/signup">
