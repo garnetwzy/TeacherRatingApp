@@ -78,9 +78,11 @@ router.post("/signup", async function (req, res, next) {
 const nPerPage = 6;
 
 router.get("/teachers", async function (req, res, next) {
-  const query = req.query.query || "";
-  const page = +req.query.page || 0;
-  let result = await MyDB.queryTeachers(page);
+  const page = req.query.page || 0;
+  console.log("debuging /teachers");
+  delete req.query.page;
+  console.log(req.query);
+  let result = await MyDB.queryTeachers(page, req.query);
   res.json(result);
   // Here pagination is implemented in Javascript
 

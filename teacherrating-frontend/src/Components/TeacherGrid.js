@@ -49,7 +49,7 @@ export default function TeacherGrid() {
   useEffect(() => {
     const fetchTeachers = async () => {
       console.log("start");
-      const resRaw = await fetch(`./teachers?query=${query}&page=${page}`);
+      const resRaw = await fetch(`./teachers?${query}&page=${page}`);
       const res = await resRaw.json();
       console.log("Got data", res);
       setTeachers(res.result);
@@ -64,12 +64,15 @@ export default function TeacherGrid() {
       console.log("Will unmount");
       //do any cleanup;
     };
-  }, [page]);
+  }, [page, query]);
 
   return (
     <Box width="100%" className={classes.root}>
       <Box width={1} p={1} my={0.5}>
-        <TeacherSearchBar setTeachers={setTeachers}></TeacherSearchBar>
+        <TeacherSearchBar
+          setPage={setPage}
+          setQuery={setQuery}
+        ></TeacherSearchBar>
         <div style={{ padding: 20 }}>
           <Grid container className={classes.container} spacing={3}>
             {renderTeachers(teachers)}

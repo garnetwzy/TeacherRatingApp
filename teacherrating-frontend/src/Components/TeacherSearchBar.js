@@ -6,7 +6,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import universities from "../university.json";
 import fields from "../study_field.json";
 
-const TeacherSearchBar = ({ setTeachers }) => {
+const TeacherSearchBar = ({ setPage, setQuery }) => {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     let name = document.getElementById("teacherName").value;
@@ -26,14 +26,9 @@ const TeacherSearchBar = ({ setTeachers }) => {
       queryObj.append("field", field);
     }
 
-    const response = await fetch(`/teacher?${queryObj.toString()}`);
-    const responseJson = await response.json();
-
-    if (responseJson.found) {
-      setTeachers([responseJson.teacher]);
-    } else {
-      setTeachers([]);
-    }
+    console.log(queryObj.toString());
+    setQuery(queryObj.toString());
+    setPage(0);
   };
 
   return (
