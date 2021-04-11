@@ -3,7 +3,7 @@ var router = express.Router();
 const MyDB = require("../db/MyDB");
 var jwt = require("jsonwebtoken");
 var config = require("../config/auth.config");
-const {ObjectId } = require("mongodb");
+const { ObjectId } = require("mongodb");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -26,7 +26,7 @@ router.post("/login", async function (req, res, next) {
       secure: false,
       maxAge: 3600000,
     });
-    res.json({ code: 200, token: token});
+    res.json({ code: 200, token: token });
   } else {
     res.json({
       code: 550,
@@ -39,10 +39,10 @@ router.post("/addteacher", async function (req, res, next) {
   let queryResult = await MyDB.queryTeacher({
     name: req.body.name,
     university: req.body.university,
-    field: req.body.field
-  })
+    field: req.body.field,
+  });
   if (queryResult) {
-    res.json({code: 400, message: "This user is already been added."})
+    res.json({ code: 400, message: "This user is already been added." });
   } else {
     let teacher = {
       name: req.body.name,
@@ -50,13 +50,13 @@ router.post("/addteacher", async function (req, res, next) {
       field: req.body.field,
       sumScores: 0,
       comments: [],
-      commentCount: 0
-    }
-    let result = await MyDB.storeTeacher(teacher)
+      commentCount: 0,
+    };
+    let result = await MyDB.storeTeacher(teacher);
     if (result) {
-      res.json({code: 200});
+      res.json({ code: 200 });
     } else {
-      res.json({code: 500});
+      res.json({ code: 500 });
     }
   }
 });
@@ -72,16 +72,18 @@ router.post("/signup", async function (req, res, next) {
       password: req.body.password,
     });
   }
-  res.json({ code: 200});
+  res.json({ code: 200 });
 });
 
 const nPerPage = 6;
 
 router.get("/teachers", async function (req, res, next) {
-  const query = req.query.query || "";
-  const page = +req.query.page || 0;
-  let result = await MyDB.queryTeachers(page)
-  res.json(result)
+  const page = req.query.page || 0;
+  console.log("debuging /teachers");
+  delete req.query.page;
+  console.log(req.query);
+  let result = await MyDB.queryTeachers(page, req.query);
+  res.json(result);
   // Here pagination is implemented in Javascript
 
   // You actually want to implement it in Mongo
@@ -95,10 +97,10 @@ router.get("/teachers", async function (req, res, next) {
 });
 
 router.get("/teacher", async function (req, res, next) {
-  const query = {_id: ObjectId(req.query.id)}
-  let result = await MyDB.queryTeacher(query)
-  console.log("end")
-  res.json(result)
+  const query = { _id: ObjectId(req.query.id) };
+  let result = await MyDB.queryTeacher(query);
+  console.log("end");
+  res.json(result);
 });
 
 module.exports = router;
