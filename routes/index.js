@@ -97,21 +97,10 @@ router.get("/teachers", async function (req, res, next) {
 });
 
 router.get("/teacher", async function (req, res, next) {
-  console.log("/teacher");
-  let result = await MyDB.queryTeacher(req.query);
-
-  if (result === null) {
-    res.json({
-      code: 200,
-      found: false,
-    });
-  } else {
-    res.json({
-      code: 200,
-      found: true,
-      teacher: result,
-    });
-  }
+  const query = { _id: ObjectId(req.query.id) };
+  let result = await MyDB.queryTeacher(query);
+  console.log("end");
+  res.json(result);
 });
 
 module.exports = router;
