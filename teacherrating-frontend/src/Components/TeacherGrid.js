@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import TeacherItem from "./TeacherItem";
 import Pagination from "@material-ui/lab/Pagination";
 import Box from "@material-ui/core/Box";
+import TeacherSearchBar from "./TeacherSearchBar";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -63,11 +64,12 @@ export default function TeacherGrid() {
       console.log("Will unmount");
       //do any cleanup;
     };
-  }, []);
+  }, [page]);
 
   return (
     <Box width="100%" className={classes.root}>
       <Box width={1} p={1} my={0.5}>
+        <TeacherSearchBar setTeachers={setTeachers}></TeacherSearchBar>
         <div style={{ padding: 20 }}>
           <Grid container className={classes.container} spacing={3}>
             {renderTeachers(teachers)}

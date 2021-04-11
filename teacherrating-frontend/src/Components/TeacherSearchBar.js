@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
@@ -6,22 +6,34 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import universities from "../university.json";
 import fields from "../study_field.json";
 
-const TeacherSearchBar = () => {
+const TeacherSearchBar = ({ setTeachers }) => {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
-    let formData = new FormData();
     let name = document.getElementById("teacherName").value;
     let university = document.getElementById("university").value;
     let field = document.getElementById("field").value;
-    formData.append("name", name);
-    formData.append("university", university);
-    formData.append("field", field);
+    let queryObj = new URLSearchParams();
 
-    const response = await fetch("/dummy", {
-      method: "get",
-      body: formData,
-    });
+    if (name !== "") {
+      queryObj.append("name", name);
+    }
+
+    if (university !== "") {
+      queryObj.append("university", university);
+    }
+
+    if (field !== "") {
+      queryObj.append("field", field);
+    }
+
+    const response = await fetch(`/teacher?${queryObj.toString()}`);
     const responseJson = await response.json();
+
+    if (responseJson.found) {
+      setTeachers([responseJson.teacher]);
+    } else {
+      setTeachers([]);
+    }
   };
 
   return (
