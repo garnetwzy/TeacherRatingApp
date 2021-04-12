@@ -31,7 +31,7 @@ Implement a website using React, express and mongodb, and then deploy it on hero
 2. Use 'cd' command to enter the project directory
 3. Use 'npm install' to install the dependencies
 4. Install mongodb locally and start the service of mongodb locally
-5. Use 'npm start' to start the service and then we can access the website locally at 'localhost://3000'
+5. Use 'npm start' to start the backend service and then we can access the website locally at 'localhost://3001'
 
 ## A short public and narrated video demonstrating the application
 
