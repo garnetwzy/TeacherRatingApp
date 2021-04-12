@@ -20,9 +20,10 @@ Implement a website using React, express and mongodb, and then deploy it on hero
 
 ## Screenshot
 
-![image](https://github.com/yimingdeveloper/WebStorageApp/blob/main/public/assets/screenshot1.jpg)
-![image](https://github.com/yimingdeveloper/WebStorageApp/blob/main/public/assets/screenshot2.png)
-![image](https://github.com/yimingdeveloper/WebStorageApp/blob/main/public/assets/screenshot3.png)
+![image](https://raw.githubusercontent.com/garnetwzy/TeacherRatingApp/main/public/assets/screen_shot_home_page.png)
+![image](https://raw.githubusercontent.com/garnetwzy/TeacherRatingApp/main/public/assets/screen_shot_sign_in.png)
+![image](https://raw.githubusercontent.com/garnetwzy/TeacherRatingApp/main/public/assets/screen_shot_sign_up.png)
+![image](https://raw.githubusercontent.com/garnetwzy/TeacherRatingApp/main/public/assets/screen_shot_teacher_rating.png)
 
 ## Instructions to build
 
