@@ -17,4 +17,11 @@ app.use(bodyParser.json());
 app.use(fileUpload());
 
 app.use("/", indexRouter);
+
+app.get("/*", (req, res) => {
+  let val = path.resolve("teacherrating-frontend", "build", "index.html");
+  console.log("ddd");
+  console.log(val);
+  res.sendFile(path.resolve("teacherrating-frontend", "build", "index.html"));
+});
 module.exports = app;
