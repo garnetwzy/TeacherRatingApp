@@ -1,14 +1,7 @@
-import React, { useState } from "react";
-import Avatar from "@material-ui/core/Avatar";
+import React from "react";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -46,7 +39,7 @@ export default function AddTeacher() {
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Enter teacher's information
+          Enter teacher&apos;s information
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <TextField
@@ -88,9 +81,6 @@ export default function AddTeacher() {
               let name = document.getElementById("teacherName").value
               let university =  document.getElementById("university").value
               let field = document.getElementById("field").value
-              console.log(name)
-              console.log(university)
-              console.log(field)
               formData.append("name", name);
               formData.append("university", university);
               formData.append("field", field);
@@ -103,9 +93,11 @@ export default function AddTeacher() {
                 alert(res.message);
               } else if (res.code === 200) {
                 alert("Teacher added successfully!");
-                history.push("home");
+                history.push("/home");
+              } else if (res.code === 403) {
+                history.push("/")
               } else {
-                  alert("The server has some errors, please try later!");
+                alert("The server has some errors, please try later!");
               }
             }}
           >

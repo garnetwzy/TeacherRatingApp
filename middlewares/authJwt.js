@@ -12,8 +12,7 @@ let verifyToken = (req, res, next) => {
     if (isLoginPage) {
       next();
     } else {
-      res.redirect("/");
-      return res.status(403).send({ message: "No token provided!" });
+      return res.status(403).send({ code: 403, message: "No token provided!" });
     }
   } else {
     jwt.verify(token, config.secret, (err, decoded) => {
@@ -21,7 +20,7 @@ let verifyToken = (req, res, next) => {
         if (isLoginPage) {
           next();
         } else {
-          res.redirect("/");
+          return res.status(403).send({ code: 403, message: "Wrong token!" });
         }
       } else {
         console.log("decode id");

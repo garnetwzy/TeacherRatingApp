@@ -1,10 +1,12 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Container from "@material-ui/core/Container";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import universities from "../university.json";
 import fields from "../study_field.json";
+import { Box } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import PropTypes from "prop-types";
 
 const TeacherSearchBar = ({ setPage, setQuery }) => {
   const handleSubmit = async (evt) => {
@@ -26,55 +28,74 @@ const TeacherSearchBar = ({ setPage, setQuery }) => {
       queryObj.append("field", field);
     }
 
-    console.log(queryObj.toString());
     setQuery(queryObj.toString());
-    setPage(0);
+    setPage(1);
   };
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          margin="normal"
-          fullWidth
-          id="teacherName"
-          label="Teacher's name"
-          name="teacherName"
-          autoComplete="email"
-          autoFocus
-        ></TextField>
-        <Autocomplete
-          id="university"
-          options={universities}
-          getOptionLabel={(option) => option.institution}
-          style={{ width: 300 }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="University"
-              variant="outlined"
-              margin="normal"
-            />
-          )}
-        />
-        <Autocomplete
-          id="field"
-          options={fields}
-          getOptionLabel={(option) => option.field}
-          style={{ width: 300 }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Study of Field"
-              variant="outlined"
-              margin="normal"
-            />
-          )}
-        />
-        <Button type="submit">Search</Button>
-      </form>
-    </Container>
+    <Box marginLeft={0} marginRight={2}>
+      <Grid
+        container
+        spacing={6}
+        direction="row"
+        justify="center"
+        alignItems="center"
+      >
+        <Grid item xs={3}>
+          <TextField
+            margin="normal"
+            fullWidth
+            id="teacherName"
+            label="Search teacher by name"
+            name="teacherName"
+            autoFocus
+          ></TextField>
+        </Grid>
+        <Grid item xs={3}>
+          <Autocomplete
+            id="university"
+            options={universities}
+            getOptionLabel={(option) => option.institution}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="University"
+                variant="outlined"
+                margin="normal"
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <Autocomplete
+            id="field"
+            options={fields}
+            getOptionLabel={(option) => option.field}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Study of Field"
+                variant="outlined"
+                margin="normal"
+              />
+            )}
+          />
+        </Grid>
+        <Grid item>
+          <Box>
+            <Button variant="contained" onClick={handleSubmit}>
+              Search
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 
 export default TeacherSearchBar;
+
+TeacherSearchBar.propTypes = {
+  setPage: PropTypes.func,
+  setQuery: PropTypes.func
+};

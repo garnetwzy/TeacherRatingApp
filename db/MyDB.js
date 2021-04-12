@@ -68,9 +68,6 @@ function myDB() {
         .limit(pageNumber)
         .toArray();
       let count = await userCol.count(query);
-      console.log("filter");
-      console.log(count);
-      console.log(file);
       return { result: file, count: count };
     } finally {
       client.close();
@@ -92,60 +89,29 @@ function myDB() {
     }
   };
 
-  myDB.createFile = async (file) => {
+  myDB.addComment = async (id, data) => {
     try {
       client = new MongoClient(uri, { useUnifiedTopology: true });
-      console.log("Connecting to the db");
       await client.connect();
-      console.log("Connected!");
       const db = client.db(dbName);
-      const filesCol = db.collection("files");
-      console.log("Collection ready, insert ", file);
-      const res = await filesCol.insertOne(file);
-      console.log("Inserted", res);
-
-      return res;
+      const userCol = db.collection("teachers");
+      let target = await userCol.findOne({ _id: ObjectId(id) });
+      console.log("target");
+      console.log(target);
+      target.commentCount = target.commentCount + 1;
+      target.sumScores = target.sumScores + parseFloat(data.grade);
+      target.comments.push(data);
+      console.log("after")
+      console.log(target);
+      let result = await userCol.replaceOne(
+        { _id: ObjectId(id) },
+        target
+      );
+      return result;
+    } catch (error) {
+      console.log(error);
+      return error;
     } finally {
-      console.log("Closing the connection");
-      client.close();
-    }
-  };
-
-  myDB.getFiles = async (query) => {
-    try {
-      client = new MongoClient(uri, { useUnifiedTopology: true });
-      console.log("Connecting to the db");
-      await client.connect();
-      console.log("Connected!");
-      const db = client.db(dbName);
-      const filesCol = db.collection("files");
-      console.log("Collection ready, querying with ", query);
-      const files = await filesCol.find(query).toArray();
-      console.log("Got files", files);
-
-      return files;
-    } finally {
-      console.log("Closing the connection");
-      client.close();
-    }
-  };
-
-  myDB.deleteFile = async (file) => {
-    let client;
-    try {
-      client = new MongoClient(uri, { useUnifiedTopology: true });
-      console.log("Connecting to the db");
-      await client.connect();
-      console.log("Connected!");
-      const db = client.db(dbName);
-      const filesCol = db.collection("files");
-      console.log("Collection ready, deleting ", file);
-      const files = await filesCol.deleteOne({ _id: ObjectId(file._id) });
-      console.log("Got files", files);
-
-      return files;
-    } finally {
-      console.log("Closing the connection");
       client.close();
     }
   };

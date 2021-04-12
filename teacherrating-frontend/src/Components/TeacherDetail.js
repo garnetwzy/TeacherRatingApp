@@ -1,25 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Rating from "@material-ui/lab/Rating";
 import Box from "@material-ui/core/Box";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { useHistory, useParams } from "react-router-dom";
 import CommentsList from "./CommentsList";
-import Image from "./background.jpg";
-import Divider from "@material-ui/core/Divider";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 
 const queryString = require("query-string");
 
@@ -36,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
   rightpart: {
     display: "flex",
     flexDirection: "column",
-    // justifyContent: "center",
     marginTop: 10,
     height: "100vh",
     color: "primary.main",
@@ -54,44 +45,78 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
   },
-
 }));
 
-export default function TeacherDetail(props) {
+export default function TeacherDetail() {
   const classes = useStyles();
-  let history = useHistory();
+
   let parsed = queryString.parse(window.location.search);
-  const [open, setOpen] = React.useState(false);
   let id = parsed.id;
-  let grade = 0;
+
+  const [open, setOpen] = useState(true);
+  // review related data
+  let [value, setValue] = useState(0);
+  let [title, setTitle] = useState("");
+  let [review, setReview] = useState("");
+  let [grade, setGrade] = useState(0);
   let [teacher, setTeacher] = useState(null);
 
-  const [dialogOpen, setDialogOpen] = React.useState(true);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const getCurrentDate = () => {
+    var today = new Date();
+    var dd = today.getDate();
+
+    var mm = today.getMonth() + 1;
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+    if (mm < 10) {
+      mm = "0" + mm;
+    }
+    return mm + "-" + dd + "-" + yyyy;
   };
 
   const handleClose = () => {
     setDialogOpen(false);
   };
 
-  //   useEffect(() => {
-  //     const fetchTeacher = async () => {
-  //       const resRaw = await fetch(`./teacher?id=${id}`);
-  //       const res = await resRaw.json();
-  //       console.log("Got data", res);
-  //       if (res.commentCount > 0) {
-  //           grade = res.sumScores / res.commentCount;
-  //       }
-  //       setTeacher(res);
-  //       setOpen(false);
-  //     };
-  //     fetchTeacher();
-  //     return () => {
-  //       //do any cleanup;
-  //     };
-  //   }, []);
+  const submitReview = async () => {
+    let date = getCurrentDate();
+    let formData = new FormData();
+    formData.append("date", date);
+    formData.append("grade", value);
+    formData.append("title", title);
+    formData.append("review", review);
+    formData.append("id", id);
+    const raw = await fetch("/updateteacher", {
+      method: "post",
+      body: formData,
+    });
+    const res = await raw.json(); // parses JSON response into native JavaScript objects
+    if (res.code === 200) {
+        window.location.reload();
+    } else {
+      alert("no such user or wrong passcode.");
+    }
+  };
+
+    useEffect(() => {
+      const fetchTeacher = async () => {
+        const resRaw = await fetch(`./teacher?id=${id}`);
+        const res = await resRaw.json();
+        if (res.commentCount > 0) {
+            setGrade(res.sumScores / res.commentCount);
+        }
+        setTeacher(res);
+        setOpen(false);
+      };
+      fetchTeacher();
+      return () => {
+        //do any cleanup;
+      };
+    }, []);
 
   if (open) {
     return (
@@ -111,65 +136,72 @@ export default function TeacherDetail(props) {
           open={dialogOpen}
           onClose={handleClose}
           aria-labelledby="form-dialog-title"
+          bgcolor="red"
         >
-            <Box width={1} marginLeft={0} marginRight={2}>
+          <Box width={1} marginLeft={0} marginRight={50}>
             <DialogTitle id="form-dialog-title">Rate this teacher</DialogTitle>
-          <DialogContent >
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Title"
-              fullWidth
-              width = {1}
-            />
-            <Rating value={grade} />
-            <Box marginRight={5} bgcolor="gray" width={1}>
-                <Box width={1}>
-                <TextField
-                id="outlined-multiline-static"
-                label="Review"
-                multiline
-                rows={4}
-                defaultValue="Default Value"
-                variant="outlined"
+            <DialogContent>
+              <TextField
+                
+                margin="dense"
+                id="name"
+                label="Title"
+                fullWidth
+                value={title}
+                onChange={(event) => {
+                  setTitle(event.target.value);
+                }}
               />
-                </Box>
-              
-            </Box>
-          </DialogContent>
-            </Box>
-
+              <Rating
+                name="simple-controlled"
+                value={value}
+                onChange={(evt) => {
+                  setValue(evt.target.value);
+                }}
+              />
+              <Box display="flex" lexDirection="row" width={1} marginTop={1}>
+                <TextField
+                  label="Review"
+                  multiline
+                  fullWidth
+                  rows={4}
+                  variant="outlined"
+                  value={review}
+                  onChange={(event) => {
+                    setReview(event.target.value);
+                  }}
+                />
+              </Box>
+            </DialogContent>
+          </Box>
 
           <DialogActions>
             <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleClose} color="primary">
-              Subscribe
+            <Button onClick={submitReview} color="primary">
+              Submit
             </Button>
           </DialogActions>
         </Dialog>
-        <Box className={classes.leftpart} width={0.3} bgcolor="secondary.light">
+        <Box className={classes.leftpart} width={0.3} bgcolor="info.light">
           <div className={classes.paper}>
             <Box justifyContent="center">
               <Typography variant="h4" component="h2">
-                {/* {teacher.name} */}
-                Zhenyu Wang
+                {teacher.name}
               </Typography>
               <Box marginTop={1}>
                 <Typography variant="h5" color="textSecondary" gutterBottom>
-                  {/* {teacher.university} */}
-                  Northeastern University
+                  {teacher.university}
                   <br />
-                  Computer science
+                  {teacher.field}
+
                 </Typography>
               </Box>
 
               <Box marginTop={1}>
                 <Typography variant="body" component="p">
-                  average score of 0 reviews
-                  {/* average score of {teacher.commentCount} reviews */}
+                  average score of {teacher.commentCount} reviews
                 </Typography>
               </Box>
 
@@ -177,7 +209,7 @@ export default function TeacherDetail(props) {
                 <Rating name="read-only" value={grade} readOnly />
               </Box>
 
-              <Button
+              <Button color="primary"
                 onClick={() => {
                   setDialogOpen(true);
                 }}
@@ -193,7 +225,7 @@ export default function TeacherDetail(props) {
               Reviews
             </Typography>
           </Box>
-          <CommentsList></CommentsList>
+          <CommentsList arrayOfReviews={teacher.comments}></CommentsList>
         </Box>
       </Box>
     );

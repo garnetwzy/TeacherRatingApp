@@ -4,6 +4,7 @@ const MyDB = require("../db/MyDB");
 var jwt = require("jsonwebtoken");
 var config = require("../config/auth.config");
 const { ObjectId } = require("mongodb");
+var authJwt = require("../middlewares/authJwt");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -16,8 +17,6 @@ router.post("/login", async function (req, res, next) {
     password: req.body.password,
   });
   if (result) {
-    console.log("private");
-    console.log(config.secret);
     var token = jwt.sign({ id: req.body.email }, config.secret, {
       expiresIn: 86400, // 24 hours
     });
@@ -35,7 +34,7 @@ router.post("/login", async function (req, res, next) {
   }
 });
 
-router.post("/addteacher", async function (req, res, next) {
+router.post("/addteacher", [authJwt.verifyToken], async function (req, res, next) {
   let queryResult = await MyDB.queryTeacher({
     name: req.body.name,
     university: req.body.university,
@@ -77,30 +76,54 @@ router.post("/signup", async function (req, res, next) {
 
 const nPerPage = 6;
 
-router.get("/teachers", async function (req, res, next) {
+router.get("/teachers", [authJwt.verifyToken], async function (req, res, next) {
   const page = req.query.page || 0;
   console.log("debuging /teachers");
   delete req.query.page;
   console.log(req.query);
   let result = await MyDB.queryTeachers(page, req.query);
   res.json(result);
-  // Here pagination is implemented in Javascript
-
-  // You actually want to implement it in Mongo
-  // something like
-  //
-  // movies
-  //   .find({title: {$regex: query}})
-  //   .sort({ _id: 1 })
-  //   .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
-  //   .limit(nPerPage);
 });
 
-router.get("/teacher", async function (req, res, next) {
+router.get("/teacher", [authJwt.verifyToken], async function (req, res, next) {
   const query = { _id: ObjectId(req.query.id) };
   let result = await MyDB.queryTeacher(query);
   console.log("end");
   res.json(result);
 });
+
+router.post("/updateteacher", async function (req, res, next) {
+  console.log("here");
+  console.log(req.body.title);
+  console.log(req.body.id);
+  console.log(req.body.grade);
+  console.log(req.body.review);
+  let data = {
+    title: req.body.title,
+    date: req.body.date,
+    grade: parseFloat(req.body.grade),
+    review: req.body.review,
+  };
+  console.log(data);
+  let result = await MyDB.addComment(req.body.id, data);
+  if (result) {
+    res.json({ code: 200 });
+  } else {
+    res.json({ code: 500 });
+  }
+});
+
+router.get("/currentuser", [authJwt.verifyToken], function(req, res, next){
+  res.json({code: 200});
+}) 
+
+router.get("/logout", function(req, res, next) {
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    secure: false,
+    maxAge: 0,
+  });
+  res.json({code: 200});
+})
 
 module.exports = router;

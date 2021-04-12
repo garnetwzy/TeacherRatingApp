@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Rating from "@material-ui/lab/Rating";
 import Box from "@material-ui/core/Box";
 import { useHistory } from 'react-router-dom';
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles({
   root: {
@@ -28,7 +29,6 @@ const useStyles = makeStyles({
 
 export default function TeacherItem(props) {
   const classes = useStyles();
-  console.log(props.teacher.commentCount)
   let history = useHistory();
   let grade = 0
   if (props.teacher.commentCount > 0) {
@@ -65,3 +65,14 @@ export default function TeacherItem(props) {
     </Box>
   );
 }
+
+TeacherItem.propTypes = {
+    teacher: PropTypes.shape({
+        commentCount: PropTypes.number,
+        field: PropTypes.string,
+        sumScores: PropTypes.number,
+        university: PropTypes.string,
+        name: PropTypes.string,
+        _id: PropTypes.string
+    })
+  };
