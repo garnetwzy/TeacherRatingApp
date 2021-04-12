@@ -12,6 +12,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
+import { useHistory } from "react-router-dom";
 
 const queryString = require("query-string");
 
@@ -51,6 +52,7 @@ export default function TeacherDetail() {
   const classes = useStyles();
 
   let parsed = queryString.parse(window.location.search);
+  let history = useHistory();
   let id = parsed.id;
 
   const [open, setOpen] = useState(true);
@@ -96,27 +98,33 @@ export default function TeacherDetail() {
     });
     const res = await raw.json(); // parses JSON response into native JavaScript objects
     if (res.code === 200) {
-        window.location.reload();
+      window.location.reload();
+    } else if (res.code === 403) {
+      history.push("/");
     } else {
       alert("no such user or wrong passcode.");
     }
   };
 
-    useEffect(() => {
-      const fetchTeacher = async () => {
-        const resRaw = await fetch(`./teacher?id=${id}`);
-        const res = await resRaw.json();
+  useEffect(() => {
+    const fetchTeacher = async () => {
+      const resRaw = await fetch(`./teacher?id=${id}`);
+      const res = await resRaw.json();
+      if (res.code === 403) {
+        history.push("/");
+      } else {
         if (res.commentCount > 0) {
-            setGrade(res.sumScores / res.commentCount);
+          setGrade(res.sumScores / res.commentCount);
         }
         setTeacher(res);
         setOpen(false);
-      };
-      fetchTeacher();
-      return () => {
-        //do any cleanup;
-      };
-    }, []);
+      }
+    };
+    fetchTeacher();
+    return () => {
+      //do any cleanup;
+    };
+  }, []);
 
   if (open) {
     return (
@@ -142,7 +150,6 @@ export default function TeacherDetail() {
             <DialogTitle id="form-dialog-title">Rate this teacher</DialogTitle>
             <DialogContent>
               <TextField
-                
                 margin="dense"
                 id="name"
                 label="Title"
@@ -195,7 +202,6 @@ export default function TeacherDetail() {
                   {teacher.university}
                   <br />
                   {teacher.field}
-
                 </Typography>
               </Box>
 
@@ -209,7 +215,8 @@ export default function TeacherDetail() {
                 <Rating name="read-only" value={grade} readOnly />
               </Box>
 
-              <Button color="primary"
+              <Button
+                color="primary"
                 onClick={() => {
                   setDialogOpen(true);
                 }}

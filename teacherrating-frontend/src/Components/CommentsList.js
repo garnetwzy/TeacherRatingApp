@@ -29,8 +29,6 @@ const useStyles = makeStyles(() => ({
 export default function CommentsList(props) {
   const classes = useStyles();
   let arrayOfReviews = props.arrayOfReviews
-  console.log("hhh")
-  console.log(arrayOfReviews)
   
   const renderList = (reviews) => {
     let res = [];
