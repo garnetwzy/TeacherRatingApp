@@ -6,11 +6,6 @@ var config = require("../config/auth.config");
 const { ObjectId } = require("mongodb");
 var authJwt = require("../middlewares/authJwt");
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
-});
-
 router.post("/login", async function (req, res, next) {
   let result = await MyDB.queryUser({
     email: req.body.email,

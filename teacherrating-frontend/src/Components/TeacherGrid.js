@@ -72,7 +72,6 @@ export default function TeacherGrid() {
     };
     fetchTeachers();
     return () => {
-      console.log("Will unmount");
       //do any cleanup;
     };
   }, [page, query]);
