@@ -5,9 +5,7 @@ const pageNumber = 6;
 function myDB() {
   const myDB = {};
   const dbName = "fileStorage";
-  const uri =
-    "mongodb+srv://wzy:123456wzy@cluster0.jroge.mongodb.net/myFirstDatabase?retryWrites=true";
-  //process.env.DB_URL
+  const uri = process.env.DB_URL
   let client;
 
   myDB.queryUser = async (query = {}) => {
