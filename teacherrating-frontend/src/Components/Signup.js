@@ -54,6 +54,9 @@ export default function SignUp() {
         history.push("/home");
       }
     };
+    
+    // I got 403 error. It seems that it will call fetch("/currentuser") everytime the page loads before submission event being listened and handled. 
+    
     fetchTeacher();
     return () => {
       //do any cleanup;
