@@ -59,6 +59,7 @@ export default function SignUp() {
       //do any cleanup;
     };
   }, []);
+  // I got 403 error. It seems that you fetch /currentuser every time the page loads before listenting submission event. 
 
   if (loading) {
     return (
