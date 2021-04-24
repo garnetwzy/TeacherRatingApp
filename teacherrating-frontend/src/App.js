@@ -1,12 +1,12 @@
-import "./App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import SignIn from "./Components/Signin";
-import SignUp from "./Components/Signup";
-import PrimarySearchAppBar from "./Components/SearchAppBar";
-import TeacherGrid from "./Components/TeacherGrid";
-import AddTeacher from "./Components/AddTeacher";
-import TeacherDetail from "./Components/TeacherDetail";
-import React from "react";
+import './App.css';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import SignIn from './Components/Signin';
+import SignUp from './Components/Signup';
+import PrimarySearchAppBar from './Components/SearchAppBar';
+import TeacherGrid from './Components/TeacherGrid';
+import AddTeacher from './Components/AddTeacher';
+import TeacherDetail from './Components/TeacherDetail';
+import React from 'react';
 
 function App() {
   return (

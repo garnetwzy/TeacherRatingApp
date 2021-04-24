@@ -1,50 +1,50 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Rating from "@material-ui/lab/Rating";
-import Box from "@material-ui/core/Box";
-import Backdrop from "@material-ui/core/Backdrop";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import CommentsList from "./CommentsList";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Rating from '@material-ui/lab/Rating';
+import Box from '@material-ui/core/Box';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import CommentsList from './CommentsList';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
+import { useHistory } from 'react-router-dom';
 
-const queryString = require("query-string");
+const queryString = require('query-string');
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   leftpart: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    height: "100vh",
-    color: "primary.main",
-    bgcolor: "info.light",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: '100vh',
+    color: 'primary.main',
+    bgcolor: 'info.light',
   },
   rightpart: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     marginTop: 10,
-    height: "100vh",
-    color: "primary.main",
-    bgcolor: "info.light",
+    height: '100vh',
+    color: 'primary.main',
+    bgcolor: 'info.light',
   },
   paper: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   title: {
     fontSize: 14,
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: "#fff",
+    color: '#fff',
   },
 }));
 
@@ -58,8 +58,8 @@ export default function TeacherDetail() {
   const [open, setOpen] = useState(true);
   // review related data
   let [value, setValue] = useState(0);
-  let [title, setTitle] = useState("");
-  let [review, setReview] = useState("");
+  let [title, setTitle] = useState('');
+  let [review, setReview] = useState('');
   let [grade, setGrade] = useState(0);
   let [teacher, setTeacher] = useState(null);
 
@@ -72,12 +72,12 @@ export default function TeacherDetail() {
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
     if (dd < 10) {
-      dd = "0" + dd;
+      dd = '0' + dd;
     }
     if (mm < 10) {
-      mm = "0" + mm;
+      mm = '0' + mm;
     }
-    return mm + "-" + dd + "-" + yyyy;
+    return mm + '-' + dd + '-' + yyyy;
   };
 
   const handleClose = () => {
@@ -87,22 +87,22 @@ export default function TeacherDetail() {
   const submitReview = async () => {
     let date = getCurrentDate();
     let formData = new FormData();
-    formData.append("date", date);
-    formData.append("grade", value);
-    formData.append("title", title);
-    formData.append("review", review);
-    formData.append("id", id);
-    const raw = await fetch("/updateteacher", {
-      method: "post",
+    formData.append('date', date);
+    formData.append('grade', value);
+    formData.append('title', title);
+    formData.append('review', review);
+    formData.append('id', id);
+    const raw = await fetch('/updateteacher', {
+      method: 'post',
       body: formData,
     });
     const res = await raw.json(); // parses JSON response into native JavaScript objects
     if (res.code === 200) {
       window.location.reload();
     } else if (res.code === 403) {
-      history.push("/");
+      history.push('/');
     } else {
-      alert("no such user or wrong passcode.");
+      alert('no such user or wrong passcode.');
     }
   };
 
@@ -111,7 +111,7 @@ export default function TeacherDetail() {
       const resRaw = await fetch(`./teacher?id=${id}`);
       const res = await resRaw.json();
       if (res.code === 403) {
-        history.push("/");
+        history.push('/');
       } else {
         if (res.commentCount > 0) {
           setGrade(res.sumScores / res.commentCount);
@@ -128,113 +128,119 @@ export default function TeacherDetail() {
 
   if (open) {
     return (
-      <Backdrop className={classes.backdrop} open={open}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      <div role="main">
+        <Backdrop className={classes.backdrop} open={open}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
     );
   } else {
     return (
-      <Box
-        className={classes.root}
-        width={1}
-        display="flex"
-        flexDirection="row"
-      >
-        <Dialog
-          open={dialogOpen}
-          onClose={handleClose}
-          aria-labelledby="form-dialog-title"
-          bgcolor="red"
+      <div role="main">
+        <Box
+          className={classes.root}
+          width={1}
+          display="flex"
+          flexDirection="row"
         >
-          <Box width={1} marginLeft={0} marginRight={50}>
-            <DialogTitle id="form-dialog-title">Rate this teacher</DialogTitle>
-            <DialogContent>
-              <TextField
-                margin="dense"
-                id="name"
-                label="Title"
-                fullWidth
-                value={title}
-                onChange={(event) => {
-                  setTitle(event.target.value);
-                }}
-              />
-              <Rating
-                name="simple-controlled"
-                value={value}
-                onChange={(evt) => {
-                  setValue(evt.target.value);
-                }}
-              />
-              <Box display="flex" lexDirection="row" width={1} marginTop={1}>
+          <Dialog
+            open={dialogOpen}
+            onClose={handleClose}
+            aria-labelledby="form-dialog-title"
+            bgcolor="red"
+          >
+            <Box width={1} marginLeft={0} marginRight={50}>
+              <DialogTitle id="form-dialog-title">
+                Rate this teacher
+              </DialogTitle>
+              <DialogContent>
                 <TextField
-                  label="Review"
-                  multiline
+                  margin="dense"
+                  id="name"
+                  label="Title"
                   fullWidth
-                  rows={4}
-                  variant="outlined"
-                  value={review}
+                  value={title}
                   onChange={(event) => {
-                    setReview(event.target.value);
+                    setTitle(event.target.value);
                   }}
                 />
-              </Box>
-            </DialogContent>
-          </Box>
-
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={submitReview} color="primary">
-              Submit
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Box className={classes.leftpart} width={0.3} bgcolor="info.light">
-          <div className={classes.paper}>
-            <Box justifyContent="center">
-              <Typography variant="h4" component="h2">
-                {teacher.name}
-              </Typography>
-              <Box marginTop={1}>
-                <Typography variant="h5" color="textSecondary" gutterBottom>
-                  {teacher.university}
-                  <br />
-                  {teacher.field}
-                </Typography>
-              </Box>
-
-              <Box marginTop={1}>
-                <Typography variant="body" component="p">
-                  average score of {teacher.commentCount} reviews
-                </Typography>
-              </Box>
-
-              <Box marginTop={1}>
-                <Rating name="read-only" value={grade} readOnly />
-              </Box>
-
-              <Button
-                color="primary"
-                onClick={() => {
-                  setDialogOpen(true);
-                }}
-              >
-                Rate this teacher right now!
-              </Button>
+                <Rating
+                  name="simple-controlled"
+                  value={value}
+                  onChange={(evt) => {
+                    setValue(evt.target.value);
+                  }}
+                />
+                <Box display="flex" lexDirection="row" width={1} marginTop={1}>
+                  <TextField
+                    label="Review"
+                    multiline
+                    fullWidth
+                    rows={4}
+                    variant="outlined"
+                    value={review}
+                    onChange={(event) => {
+                      setReview(event.target.value);
+                    }}
+                  />
+                </Box>
+              </DialogContent>
             </Box>
-          </div>
-        </Box>
-        <Box className={classes.rightpart} width={0.7}>
-          <Box marginLeft={2}>
-            <Typography variant="h4" component="h2" align="left">
-              Reviews
-            </Typography>
+
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={submitReview} color="primary">
+                Submit
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Box className={classes.leftpart} width={0.3} bgcolor="#e6f7ff">
+            <div className={classes.paper}>
+              <Box justifyContent="center">
+                <Typography variant="h2" component="h2">
+                  {teacher.name}
+                </Typography>
+                <Box marginTop={1}>
+                  <Typography variant="h3" color="textSecondary" gutterBottom>
+                    {teacher.university}
+                    <br />
+                    {teacher.field}
+                  </Typography>
+                </Box>
+
+                <Box marginTop={1}>
+                  <Typography variant="body" component="p">
+                    average score of {teacher.commentCount} reviews
+                  </Typography>
+                </Box>
+
+                <Box marginTop={1}>
+                  <Rating name="read-only" value={grade} readOnly />
+                </Box>
+
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    setDialogOpen(true);
+                  }}
+                >
+                  Rate this teacher right now!
+                </Button>
+              </Box>
+            </div>
           </Box>
-          <CommentsList arrayOfReviews={teacher.comments}></CommentsList>
+          <Box className={classes.rightpart} width={0.7}>
+            <Box marginLeft={2}>
+              <Typography variant="h2" component="h2" align="left">
+                Reviews
+              </Typography>
+            </Box>
+            <CommentsList arrayOfReviews={teacher.comments}></CommentsList>
+          </Box>
         </Box>
-      </Box>
+      </div>
     );
   }
 }
