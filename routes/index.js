@@ -13,7 +13,7 @@ router.post("/login", async function (req, res, next) {
   });
   if (result) {
     var token = jwt.sign({ id: req.body.email }, config.secret, {
-      expiresIn: 86400, // 24 hours
+      expiresIn: 86400, // 24 hours  // I like this idea!
     });
     res.cookie("jwt", token, {
       httpOnly: true,
