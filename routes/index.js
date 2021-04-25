@@ -10,6 +10,7 @@ router.post("/login", async function (req, res, next) {
   let result = await MyDB.queryUser({
     email: req.body.email,
     password: req.body.password,
+    
   });
   if (result) {
     var token = jwt.sign({ id: req.body.email }, config.secret, {
