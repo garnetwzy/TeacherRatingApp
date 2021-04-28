@@ -199,11 +199,11 @@ export default function TeacherDetail() {
           <Box className={classes.leftpart} width={0.3} bgcolor="#e6f7ff">
             <div className={classes.paper}>
               <Box justifyContent="center">
-                <Typography variant="h2" component="h2">
+                <Typography variant="h4" component="h4">
                   {teacher.name}
                 </Typography>
                 <Box marginTop={1}>
-                  <Typography variant="h3" color="textSecondary" gutterBottom>
+                  <Typography variant="h5" color="textSecondary" gutterBottom>
                     {teacher.university}
                     <br />
                     {teacher.field}
