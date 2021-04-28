@@ -48,7 +48,7 @@ router.post("/addteacher", [authJwt.verifyToken], async function (req, res, next
     };
     let result = await MyDB.storeTeacher(teacher);
     if (result) {
-      res.json({ code: 200 });
+      res.json({ code: 200 , teacher: result});
     } else {
       res.json({ code: 500 });
     }

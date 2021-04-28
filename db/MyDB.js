@@ -79,7 +79,8 @@ function myDB() {
       const db = client.db(dbName);
       const userCol = db.collection("teachers");
       let result = await userCol.insertOne(teacher);
-      return result;
+      let item = await userCol.findOne(teacher);
+      return item;
     } catch (error) {
       return error;
     } finally {

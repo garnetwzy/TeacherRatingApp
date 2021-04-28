@@ -78,7 +78,6 @@ export default function AddTeacher() {
               />
             )}
           />
-
           <Button
             type=""
             fullWidth
@@ -102,7 +101,7 @@ export default function AddTeacher() {
                 alert(res.message);
               } else if (res.code === 200) {
                 alert('Teacher added successfully!');
-                history.push('/home');
+                history.push(`/detail?id=${res.teacher._id}`)
               } else if (res.code === 403) {
                 history.push('/');
               } else {
