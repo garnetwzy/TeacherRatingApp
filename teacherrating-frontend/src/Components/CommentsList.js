@@ -36,8 +36,11 @@ export default function CommentsList(props) {
         <React.Fragment>
           <ListItem>
             <Box className={classes.boxStyle}>
-              <Typography variant="h3" color="textSecondary" gutterBottom>
+              <Typography variant="h4" color="textPrimary" gutterBottom>
                 {data.title}
+              </Typography>
+              <Typography variant="h5" color="textSecondary" gutterBottom>
+                {data.username}
               </Typography>
               <Rating
                 name="read-only"
