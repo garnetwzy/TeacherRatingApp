@@ -37,7 +37,7 @@ export default function AddTeacher() {
   let history = useHistory();
   return (
     <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
+      <div className={classes.paper}>  //why not extract the useStyles into a .css file and import here once
         <Typography component="h1" variant="h5">
           Enter teacher&apos;s information
         </Typography>
