@@ -77,7 +77,7 @@ const TeacherSearchBar = ({ setPage, setQuery }) => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Study of Field"
+                label="Field of Study"
                 variant="outlined"
                 margin="normal"
               />
